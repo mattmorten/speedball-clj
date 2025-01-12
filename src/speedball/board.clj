@@ -60,7 +60,7 @@
 (defn tile-at [board position]
   (let [[position-y position-x] position]
     (-> board (get position-y) (get position-x))))
-(mc/=> tile-at [:=> [:cat Board core/Position] Tile])
+(mc/=> tile-at [:=> [:cat Board core/Position] [:maybe Tile]])
 
 (defn empty-at? [board position]
   (is-empty? (tile-at board position)))

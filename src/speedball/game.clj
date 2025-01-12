@@ -1,10 +1,13 @@
 (ns speedball.game
-  (:require [malli.core :as mc]
+  (:require [clojure.string :as str]
+            [clojure.pprint :as pprint]
+            [malli.core :as mc]
             [malli.instrument :as mi]
             [speedball.core :as core]
             [speedball.player :as player]
             [speedball.board :as board]
-            [speedball.ball :as ball]))
+            [speedball.ball :as ball]
+            [clojure.java.io :as io]))
 
 (mi/instrument!)
 ((requiring-resolve 'malli.dev/start!))
@@ -128,6 +131,26 @@
       (update-in game [:goals team-n] inc))
     game))
 (mc/=> evaluate-game-for-goal [:=> [:cat Game] Game])
+
+
+(defn run-loop []
+  (loop [game (new-game)] ;; Start with an initial state
+    (println "Current state:" (pprint/pprint (render game)))
+    (println "Enter a key (a: increment, d: decrement, r: reset, x: quit):")
+    (let [input (str/trim (read-line))]
+      (cond
+        (= input "x") (do
+                        (println "Exiting loop.")
+                        nil) ;; Quit the loop
+        (= input "w") (recur (evaluate-game-for-goal (move-player-in-game game 0 :north))) ;; Increment state
+        (= input "a") (recur (evaluate-game-for-goal (move-player-in-game game 0 :west)));; Increment state
+        (= input "s") (recur (evaluate-game-for-goal (move-player-in-game game 0 :south))) ;; Increment state
+        (= input "d") (recur (evaluate-game-for-goal (move-player-in-game game 0 :east)));; Increment state
+        (= input "f") (recur (evaluate-game-for-goal (player-picks-up-ball game 0))) ;; In)crement state
+        (= input "g") (recur (evaluate-game-for-goal (player-drops-ball game 0))) ;; Incre)ment state
+        :else (do
+                (println "Invalid key. Try again.")
+                (recur game)))))) ;; Continue with the current state
 
 
 (-> (new-game {:players [(player/generate-player)

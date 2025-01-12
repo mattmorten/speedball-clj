@@ -30,12 +30,7 @@
   (or (= i (-> board-size second (/ 2) dec))
       (= i (-> board-size second (/ 2)))))
 
-(defn generate-empty-board []
-  (vec (for [i (range (first board-size))]
-         (vec (for [j (range (second board-size))]
-                :_)))))
-
-(defn generate-walls [board]
+(defn generate-walls []
   (vec (for [i (range (first board-size))]
          (vec (for [j (range (second board-size))]
                 (cond
@@ -52,8 +47,7 @@
 (def Board [:vector Row])
 
 (defn generate-board []
-  (-> (generate-empty-board)
-      (generate-walls)))
+  (generate-walls))
 (mc/=> generate-board [:=> [:cat] Board])
 
 

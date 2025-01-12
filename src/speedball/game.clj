@@ -136,7 +136,7 @@
 (defn run-loop []
   (loop [game (new-game)] ;; Start with an initial state
     (println "Current state:" (pprint/pprint (render game)))
-    (println "Enter a key (a: increment, d: decrement, r: reset, x: quit):")
+    (println "Enter a key (w|a|s|d: move, f: pick up ball, g: drop ball):")
     (let [input (str/trim (read-line))]
       (cond
         (= input "x") (do

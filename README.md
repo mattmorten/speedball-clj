@@ -3,8 +3,17 @@
     - [x] Multiple Players
     - [x] Multiple Teams
     - [x] Multiple Scores
-    - [x] Game loop
     - [ ] Differentiate the Goal lines between teams
+    - [ ] Tackle / Transfer ball
+    - [ ] Physics
+      - [ ] Throw ball
+        - [ ] Basic
+        - [ ] Collision
+        - [ ] Bounce
+        - [ ] Score Goal
+  - [ ] Game Loop
+    - [ ] Init
+    - [ ] Toggle players
   - [ ] Code
     - [x] Schema validation
     - [x] Multiple namespaces

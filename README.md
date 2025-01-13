@@ -11,6 +11,9 @@
         - [ ] Collision
         - [ ] Bounce
         - [ ] Score Goal
+    - [ ] Renderer
+      - [ ] Separate from the Game object / functions
+      - [ ] Camera
   - [ ] Game Loop
     - [x] Init
     - [ ] Toggle players

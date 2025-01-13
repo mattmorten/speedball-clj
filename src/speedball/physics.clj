@@ -96,13 +96,16 @@
                  :start [x y]})))
 (mc/=> init-movement [:=> [:cat core/Positionable] Moveable])
 
+(defn cancel-movement [moveable]
+  (assoc moveable :movement nil))
+
 (defn increment-movement [moveable]
   (if (some? (:movement moveable))
     (let [movement (:movement moveable)
           next-frame (-> movement :frame inc)
           animation-length (-> movement :length)]
       (if (>= next-frame animation-length)
-        (assoc moveable :movement nil)
+        (cancel-movement moveable)
         (let [next-path-element (-> movement :path (nth next-frame))
               starting-position (-> movement :start)
               new-position (core/add-vectors starting-position next-path-element)]
@@ -112,6 +115,7 @@
     moveable))
 
 (mc/=> increment-movement [:=> [:cat Moveable] Moveable])
+
 
 (-> {:position [1 1]}
     (init-movement)

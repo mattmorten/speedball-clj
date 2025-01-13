@@ -10,6 +10,13 @@
 
 (def board-size [20 16])
 
+(defn center []
+  (let [[board-x board-y] board-size
+        center-x (-> board-x (/ 2) Math/floor int)
+        center-y (-> board-y (/ 2) Math/floor int)]
+    [center-x center-y]))
+(mc/=> center [:=> [:cat] core/Position])
+
 (defn player-tile [i]
   (nth [:1 :2 :3 :4 :5] i))
 (defn player-tile-holding-ball [i]

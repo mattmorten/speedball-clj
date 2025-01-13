@@ -124,11 +124,19 @@
         tile (board/tile-at (:board game) ball-position)]
     (board/is-goal-tile? tile)))
 
+(defn do-goal-things [game]
+  ;; todo - goal detection
+  (let [team-n 0
+        player-maybe-n (which-player-n-has-ball game)]
+    (cond-> game
+            true (update-in [:goals team-n] inc)
+            true (assoc-in [:ball :position] (board/center))
+            true (update-in [:ball] physics/cancel-movement)
+            (some? player-maybe-n) (player-drops-ball player-maybe-n))))
+
 (defn evaluate-game-for-goal [game]
   (if (and (is-ball-in-goal? game))
-    (let [player-n (which-player-n-has-ball game)
-          team-n (which-team game player-n)]
-      (update-in game [:goals team-n] inc))
+    (do-goal-things game)
     game))
 (mc/=> evaluate-game-for-goal [:=> [:cat Game] Game])
 

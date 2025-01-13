@@ -12,9 +12,10 @@
 (def Index [:int {:min 0}])
 (def Position [:tuple Index Index])
 (def Positions [:+ Position])
-(mc/validate Positions [[1 1]])
 
 
+(def Positionable [:map
+                   [:position Position]])
 
 (def directions
   {:west [0 -1]

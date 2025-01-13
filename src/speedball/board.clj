@@ -8,7 +8,7 @@
 ((requiring-resolve 'malli.dev/start!))
 (mc/function-schemas)
 
-(def board-size [10 8])
+(def board-size [20 16])
 
 (defn player-tile [i]
   (nth [:1 :2 :3 :4 :5] i))

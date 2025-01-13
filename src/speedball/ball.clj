@@ -13,7 +13,8 @@
            [:position core/Position]])
 
 (defn generate-ball []
-  {:position [4 4]})
+  {:position [4 4]
+   :movement nil})
 
 
 

@@ -7,7 +7,7 @@
             [speedball.player :as player]
             [speedball.board :as board]
             [speedball.ball :as ball]
-            [clojure.java.io :as io]))
+            [speedball.physics :as physics]))
 
 (mi/instrument!)
 ((requiring-resolve 'malli.dev/start!))
@@ -132,6 +132,12 @@
     game))
 (mc/=> evaluate-game-for-goal [:=> [:cat Game] Game])
 
+(defn throw-ball [game player-n]
+  (update-in (player-drops-ball game player-n) [:ball] physics/init-movement))
+
+(defn wait-one-second [game]
+  (update-in game [:ball] physics/increment-movement))
+
 
 (defn run-loop []
   (loop [game (new-game)] ;; Start with an initial state
@@ -146,8 +152,10 @@
         (= input "a") (recur (evaluate-game-for-goal (move-player-in-game game 0 :west)));; Increment state
         (= input "s") (recur (evaluate-game-for-goal (move-player-in-game game 0 :south))) ;; Increment state
         (= input "d") (recur (evaluate-game-for-goal (move-player-in-game game 0 :east)));; Increment state
-        (= input "f") (recur (evaluate-game-for-goal (player-picks-up-ball game 0))) ;; In)crement state
+        (= input "f") (recur (evaluate-game-for-goal (player-picks-up-ball game 0))) ;; Increment state
         (= input "g") (recur (evaluate-game-for-goal (player-drops-ball game 0))) ;; Incre)ment state
+        (= input "h") (recur (evaluate-game-for-goal (throw-ball game 0)))
+        (= input "e") (recur (evaluate-game-for-goal (wait-one-second game)))
         :else (do
                 (println "Invalid key. Try again.")
                 (recur game)))))) ;; Continue with the current state

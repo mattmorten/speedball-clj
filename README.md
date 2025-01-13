@@ -6,14 +6,16 @@
     - [ ] Differentiate the Goal lines between teams
     - [ ] Tackle / Transfer ball
     - [ ] Physics
-      - [ ] Throw ball
-        - [ ] Basic
+      - [x] Throw ball
+        - [x] Basic
         - [ ] Collision
         - [ ] Bounce
         - [ ] Score Goal
   - [ ] Game Loop
-    - [ ] Init
+    - [x] Init
     - [ ] Toggle players
   - [ ] Code
     - [x] Schema validation
     - [x] Multiple namespaces
+
+z = vz*time + 

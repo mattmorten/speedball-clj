@@ -25,7 +25,7 @@
         - [x] Track ball when nobody has it
         - [ ] Smooth camera transitions
     - [ ] AI
-      - [ ] Random walk
+      - [x] Random walk
       - [ ] Hone in on ball
       - [ ] Maintain positional shape / formation
   - [ ] Game Loop

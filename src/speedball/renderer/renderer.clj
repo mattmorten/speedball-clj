@@ -49,10 +49,15 @@
 (defn run-loop []
   (loop [game (game/new-game)
          camera-mount (mount/new-camera-mount)
-         controller (controller/new-controller)]
+         controller (controller/new-human-controller)
+         ;; Will always include one for the human controller, since he might lose the ball
+         ;; One for each actual player
+         ai-controllers (controller/new-ai-controllers game controller)]
     ;; We will do this here simply because I don't want to repeat myself in all the `cond` below!!
-    (let [game (game/evaluate-game-for-goal game)
-          camera-mount (mount/evaluate-camera-mount-for-game camera-mount game)
+    (let [camera-mount (mount/evaluate-camera-mount-for-game camera-mount game)
+          ai-actions (controller/produce-ai-actions ai-controllers game)
+          game (game/apply-all-actions game ai-actions)
+          game (game/evaluate-game-for-goal game)
           controller (controller/evaluate-control controller game)]
       (print "Board:\n")
       (pprint/pprint (render-board game))
@@ -60,8 +65,12 @@
       (pprint/pprint (->> game render-board (mount/render-camera-mount camera-mount)))
       (print "Camera Mount:\n")
       (pprint/pprint camera-mount)
-      (print "Controller:\n\t")
+      (print "Controller:\n")
       (pprint/pprint controller)
+      (print "AIs:\n")
+      (pprint/pprint ai-controllers)
+      (print "AI actions taken:\n")
+      (pprint/pprint ai-actions)
       (print "Closest player-n:\n\t")
       (pprint/pprint (controller/closest-player-n-to-ball-on-controllers-team controller game))
       (print "Game:\n")
@@ -74,19 +83,19 @@
           (= input "x") (do
                           (println "Exiting loop.")
                           nil) ;; Quit the loop
-          (= input "w") (recur (game/move-player-in-game game player-n :north) camera-mount controller) ;; Increment state
-          (= input "a") (recur (game/move-player-in-game game player-n :west) camera-mount controller);; Increment state
-          (= input "s") (recur (game/move-player-in-game game player-n :south) camera-mount controller) ;; Increment state
-          (= input "d") (recur (game/move-player-in-game game player-n :east) camera-mount controller);; Increment state
-          (= input "f") (recur (game/player-picks-up-ball game player-n) camera-mount controller) ;; Increment state
-          (= input "g") (recur (game/player-drops-ball game player-n) (mount/track-ball camera-mount ) controller) ;; Incre)ment state
-          (= input "h") (recur (game/throw-ball game player-n) (mount/track-ball camera-mount) controller)
-          (= input "e") (recur (game/wait-one-second game) camera-mount controller)
-          (= input "c") (recur game (mount/toggle-player-on-camera camera-mount game) controller)
+          (= input "w") (recur (game/move-player-in-game game player-n :north) camera-mount controller ai-controllers) ;; Increment state
+          (= input "a") (recur (game/move-player-in-game game player-n :west) camera-mount controller ai-controllers);; Increment state
+          (= input "s") (recur (game/move-player-in-game game player-n :south) camera-mount controller ai-controllers) ;; Increment state
+          (= input "d") (recur (game/move-player-in-game game player-n :east) camera-mount controller ai-controllers);; Increment state
+          (= input "f") (recur (game/player-picks-up-ball game player-n) camera-mount controller ai-controllers) ;; Increment state
+          (= input "g") (recur (game/player-drops-ball game player-n) (mount/track-ball camera-mount ) controller ai-controllers) ;; Incre)ment state
+          (= input "h") (recur (game/throw-ball game player-n) (mount/track-ball camera-mount) controller ai-controllers)
+          (= input "e") (recur (game/wait-one-second game) camera-mount controller ai-controllers)
+          (= input "c") (recur game (mount/toggle-player-on-camera camera-mount game) controller ai-controllers)
 
           :else (do
                   (println "Invalid key. Try again.")
-                  (recur game camera-mount controller))))))) ;; Continue with the current state
+                  (recur game camera-mount controller ai-controllers))))))) ;; Continue with the current state
 
 
 (-> (game/new-game {:players [(player/generate-player)

@@ -136,4 +136,29 @@
 
 
 
+;; Player Atomic Actions
+(def MovePlayerAction [:map
+                       [:name [:enum :move-player]]
+                       [:player-n core/Index]
+                       [:direction core/Direction]])
 
+(defn new-move-player-action [player-n direction]
+  {:name :move-player
+   :player-n player-n
+   :direction direction})
+
+(mc/=> new-move-player-action [:=> [:cat core/Index core/Direction] MovePlayerAction])
+
+(defn apply-action
+  [game action]
+  (case (:name action)
+    :move-player (let [{:keys [player-n direction]} action]
+                   (move-player-in-game game player-n direction))))
+
+
+(defn apply-all-actions
+  [game actions]
+  (reduce
+    (fn [game action] (apply-action game action))
+    game
+    actions))

@@ -11,6 +11,9 @@
         - [ ] Collision
         - [ ] Bounce
         - [ ] Score Goal
+    - [ ] Controller
+      - [ ] Separate system for handling which player is being controlled by human(s)
+      - [ ] Select player based on camera position
     - [ ] Renderer
       - [x] Separate from the Game object / functions
       - [ ] Camera
@@ -19,6 +22,8 @@
         - [x] Tracks Player
         - [x] Stays within board bounds
         - [x] Toggle player that is being tracked
+        - [ ] Track ball when nobody has it
+        - [ ] Smooth camera transitions
   - [ ] Game Loop
     - [x] Init
     - [ ] Toggle players

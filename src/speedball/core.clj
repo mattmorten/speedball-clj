@@ -23,6 +23,21 @@
    :south [1 0]
    :north [-1 0]})
 
+(def direction->angle
+  {:south 0
+   :southeast 45
+   :east 90
+   :northeast 135
+   :north 180
+   :northwest 225
+   :west 270
+   :southwest 315})
+
+
+(defn vectors-any-lt
+  "Any component is less than the other"
+  [[a1 a2] [b1 b2]]
+  (or (< a1 a2) (< b1 b2)))
 
 
 
@@ -48,7 +63,7 @@
 
 (defn position [thing] (:position thing))
 
-(def Direction [:enum :north :east :south :west])
+(def Direction [:enum :north :east :south :west :northeast :northwest :southeast :southwest])
 
 
 

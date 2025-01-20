@@ -44,6 +44,43 @@
      (cons (position-at-time x y theta v0 friction t)
            (positions x y theta v0 friction (inc t))))))
 
+(defn handle-min-flip-component
+  [board-min-value value]
+  (if (< value board-min-value)
+    (let [overflow (- board-min-value value)]
+      (+ board-min-value overflow))
+    value))
+
+(defn handle-max-flip-component
+  [board-max-value value]
+  (if (> value board-max-value)
+    (let [overflow (- value board-max-value)]
+      (- board-max-value overflow))
+    value))
+
+(defn handle-min-flip
+  [[board-min-y board-min-x] [value-y value-x]]
+  [(handle-min-flip-component board-min-y value-y)
+   (handle-min-flip-component board-min-x value-x)])
+
+(defn handle-max-flip
+  [[board-max-y board-max-x] [value-y value-x]]
+  [(handle-max-flip-component board-max-y value-y)
+   (handle-max-flip-component board-max-x value-x)])
+
+(defn handle-walls
+  [board-dimensions position]
+  (let [board-max (core/subtract-vectors board-dimensions [2 2])
+        board-min [1 1]]
+    (loop [position position]
+      (let [new-position (->> position
+                              (handle-min-flip board-min)
+                              (handle-max-flip board-max))]
+        (if (not= position new-position)
+          (recur new-position)
+          new-position)))))
+
+
 
 (defn take-until-repeat []
   (fn [rf]
@@ -60,21 +97,23 @@
 
 
 
-(defn xform [n]
+(defn xform [n start board-dimensions]
   (comp
     (map position-to-vec)
     (map (partial scale 0.1))
     (map vec-to-int)
+    (map (partial core/add-vectors start))
+    (map (partial handle-walls board-dimensions))
     (take n)))
     ;(take-until-repeat)))
 
 
 ;(transduce xform conj (positions 0 0 30 20 0.2))
 
-(defn take-and-remainder [s]
-  [(sequence (xform 1) s) (drop 1 s)])
+;(defn take-and-remainder [s]
+;  [(sequence (xform 1) s) (drop 1 s)])
 
-(sequence (xform 10) (positions 0 0 30 20 0.2))
+;(sequence (xform 10) (positions 0 0 30 20 0.2))
 
 (def Movement
   [:map
@@ -87,14 +126,15 @@
    [:position core/Position]
    [:movement [:maybe Movement]]])
 
-(defn init-movement [positionable]
-  (let [[x y] (:position positionable)]
+(defn init-movement [direction board-dimensions positionable]
+  (let [[x y] (:position positionable)
+        angle (core/direction->angle direction)]
     (assoc positionable
-      :movement {:path (sequence (xform 10) (positions x y 30 20 0.2))
+      :movement {:path (sequence (xform 10 [x y] board-dimensions) (positions x y angle 20 0.2))
                  :frame 0
                  :length 5
                  :start [x y]})))
-(mc/=> init-movement [:=> [:cat core/Positionable] Moveable])
+(mc/=> init-movement [:=> [:cat core/Direction core/Position core/Positionable] Moveable])
 
 (defn cancel-movement [moveable]
   (assoc moveable :movement nil))
@@ -106,9 +146,7 @@
           animation-length (-> movement :length)]
       (if (>= next-frame animation-length)
         (cancel-movement moveable)
-        (let [next-path-element (-> movement :path (nth next-frame))
-              starting-position (-> movement :start)
-              new-position (core/add-vectors starting-position next-path-element)]
+        (let [new-position (-> movement :path (nth next-frame))]
           (-> moveable
               (assoc-in [:movement :frame] next-frame)
               (assoc-in [:position] new-position)))))
@@ -117,13 +155,8 @@
 (mc/=> increment-movement [:=> [:cat Moveable] Moveable])
 
 
-(-> {:position [1 1]}
-    (init-movement)
-    (increment-movement)
-    (increment-movement)
-    (increment-movement)
-    (increment-movement)
-    (increment-movement))
+(->> {:position [2 2]}
+     (init-movement :southeast [6 6]))
 
 
 

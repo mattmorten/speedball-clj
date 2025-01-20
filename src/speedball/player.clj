@@ -13,6 +13,7 @@
   [:map
    {:closed true}
    [:position core/Position]
+   [:facing core/Direction]
    [:holding-ball? :boolean]])
 
 (defn add-player-position [player-position direction]
@@ -23,13 +24,16 @@
 (defn move-player [player direction board]
   (let [new-position (add-player-position (core/position player) direction)]
     (if (board/valid-position? new-position board)
-      (assoc player :position new-position)
+      (assoc player
+        :position new-position
+        :facing direction)
       player)))
 (mc/=> move-player [:=> [:cat Player core/Direction board/Board] Player])
 
-(defn generate-player
+(defn new-player
   ([]
    {:position [2 2]
+    :facing :north
     :holding-ball? false})
   ([arg]
-   (merge (generate-player) arg)))
+   (merge (new-player) arg)))

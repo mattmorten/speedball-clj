@@ -4,13 +4,14 @@
     - [x] Multiple Teams
     - [x] Multiple Scores
     - [ ] Differentiate the Goal lines between teams
-    - [ ] Tackle / Transfer ball
     - [ ] Physics
       - [x] Throw ball
         - [x] Basic
-        - [ ] Collision
-        - [ ] Bounce
-        - [ ] Score Goal
+        - [x] Bounce
+        - [x] Score Goal
+    - [ ] Players
+      - [x] Facing Direction / Throw Direction
+      - [ ] Tackle / Transfer ball
     - [ ] Controller
       - [x] Separate system for handling which player is being controlled by human(s)
       - [x] Select player based on camera position
@@ -28,9 +29,12 @@
       - [x] Random walk
       - [ ] Hone in on ball
       - [ ] Maintain positional shape / formation
-  - [ ] Game Loop
-    - [x] Init
-    - [ ] Toggle players
+    - [ ] Output
+      - [ ] Web
+        - [ ] Convert to cljs
+    - [ ] Game Loop
+      - [x] Init
+      - [ ] Toggle players
   - [ ] Code
     - [x] Schema validation
     - [x] Multiple namespaces

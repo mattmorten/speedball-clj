@@ -25,10 +25,10 @@
 (defn new-game
   ([]
    {:board (board/generate-board)
-    :players [(player/generate-player)
-              (player/generate-player {:position [6 6]})
-              (player/generate-player {:position [6 7]})
-              (player/generate-player {:position [15 9]})]
+    :players [(player/new-player)
+              (player/new-player {:position [6 6]})
+              (player/new-player {:position [6 7]})
+              (player/new-player {:position [15 9]})]
     :teams 2
     :ball (ball/generate-ball)
     :goals [0 0]})
@@ -53,6 +53,9 @@
 
 ;;
 ;; Game
+(defn player-n [game player-n]
+  (-> game :players (nth player-n)))
+
 (defn player-position [game player-n] (-> game :players (nth player-n) :position))
 (mc/=> player-position [:=> [:cat Game core/Index] core/Position])
 
@@ -97,7 +100,8 @@
   (let [player-position (player-position game player-n)]
     (-> game
         (assoc-in [:players player-n :holding-ball?] true)
-        (assoc-in [:ball :position] player-position))))
+        (assoc-in [:ball :position] player-position)
+        (update-in [:ball] physics/cancel-movement))))
 (mc/=> player-picks-up-ball [:=> [:cat Game core/Index] Game])
 
 (defn player-drops-ball [game player-n]
@@ -128,8 +132,10 @@
     game))
 (mc/=> evaluate-game-for-goal [:=> [:cat Game] Game])
 
-(defn throw-ball [game player-n]
-  (update-in (player-drops-ball game player-n) [:ball] physics/init-movement))
+(defn throw-ball [game player-number]
+  (let [{:keys [facing]} (player-n game player-number)
+        movement-fn (partial physics/init-movement facing board/board-size)]
+    (update-in (player-drops-ball game player-number) [:ball] movement-fn)))
 
 (defn wait-one-second [game]
   (update-in game [:ball] physics/increment-movement))

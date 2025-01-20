@@ -46,7 +46,7 @@
      :player-within-team-n player-within-team
      :intention (ai/new-random-walk-intention)}))
 
-(mc/=> new-ai-controller [:=> [:cat] Controller])
+(mc/=> new-ai-controller [:=> [:cat game/Game core/Index] Controller])
 
 
 

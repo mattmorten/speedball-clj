@@ -56,6 +56,7 @@
     ;; We will do this here simply because I don't want to repeat myself in all the `cond` below!!
     (let [camera-mount (mount/evaluate-camera-mount-for-game camera-mount game)
           ai-actions (controller/produce-ai-actions ai-controllers game)
+          game (game/wait-one-second game)
           game (game/apply-all-actions game ai-actions)
           game (game/evaluate-game-for-goal game)
           controller (controller/evaluate-control controller game)]
@@ -90,7 +91,7 @@
           (= input "f") (recur (game/player-picks-up-ball game player-n) camera-mount controller ai-controllers) ;; Increment state
           (= input "g") (recur (game/player-drops-ball game player-n) (mount/track-ball camera-mount ) controller ai-controllers) ;; Incre)ment state
           (= input "h") (recur (game/throw-ball game player-n) (mount/track-ball camera-mount) controller ai-controllers)
-          (= input "e") (recur (game/wait-one-second game) camera-mount controller ai-controllers)
+          (= input "e") (recur game camera-mount controller ai-controllers)
           (= input "c") (recur game (mount/toggle-player-on-camera camera-mount game) controller ai-controllers)
 
           :else (do
@@ -98,9 +99,9 @@
                   (recur game camera-mount controller ai-controllers))))))) ;; Continue with the current state
 
 
-(-> (game/new-game {:players [(player/generate-player)
-                              (player/generate-player {:position [0 3]})]})
-    (game/player-picks-up-ball  1)
+(-> (game/new-game {:players [(player/new-player)
+                              (player/new-player {:position [0 3]})]})
+    (game/player-picks-up-ball 1)
     (game/evaluate-game-for-goal)
     (render-board))
 

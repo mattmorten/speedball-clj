@@ -7,6 +7,7 @@
             [speedball.player :as player]
             [speedball.board :as board]
             [speedball.ball :as ball]
+            [speedball.camera :as camera]
             [speedball.physics :as physics]))
 
 (mi/instrument!)
@@ -59,6 +60,9 @@
    [:=> [:cat Game core/Index] :boolean]
    [:=> [:cat Game] :boolean]])
 
+(defn number-of-players [game]
+  (-> game :players count))
+
 (defn which-player-n-has-ball [game]
   (some->> game
            :players
@@ -91,32 +95,6 @@
 (mc/=> player-drops-ball [:=> [:cat Game core/Index] Game])
 
 
-(defn render-player [game player-n]
-  (let [player-has-ball (-> game (player-has-ball? player-n))
-        player-doesnt-have-ball (not player-has-ball)
-        player-on-top-of-ball (= (player-position game player-n) (ball-position game))]
-    (cond
-      (and player-doesnt-have-ball player-on-top-of-ball) :j
-      player-has-ball (board/player-tile-holding-ball player-n)
-      player-doesnt-have-ball (board/player-tile player-n))))
-
-(defn render [game]
-  (let [[ball-y ball-x] (ball-position game)
-        player-has-ball (-> game (player-has-ball?))
-        player-doesnt-have-ball (not player-has-ball)
-        game (cond-> game
-                     player-doesnt-have-ball (assoc-in [:board ball-y ball-x] :o))]
-    ;; Recursively render the players
-    (loop [game game
-           players (:players game)
-           player-n 0]
-      (if (empty? players)
-        game
-        (let [player (first players)
-              [player-y player-x] (:position player)
-              game (assoc-in game [:board player-y player-x] (render-player game player-n))]
-          (recur game (rest players) (inc player-n)))))))
-
 
 
 (defn is-ball-in-goal? [game]
@@ -147,58 +125,5 @@
   (update-in game [:ball] physics/increment-movement))
 
 
-(defn run-loop []
-  (loop [game (new-game)] ;; Start with an initial state
-    (println "Current state:" (pprint/pprint (render game)))
-    (println "Enter a key (w|a|s|d: move, f: pick up ball, g: drop ball):")
-    (let [input (str/trim (read-line))]
-      (cond
-        (= input "x") (do
-                        (println "Exiting loop.")
-                        nil) ;; Quit the loop
-        (= input "w") (recur (evaluate-game-for-goal (move-player-in-game game 0 :north))) ;; Increment state
-        (= input "a") (recur (evaluate-game-for-goal (move-player-in-game game 0 :west)));; Increment state
-        (= input "s") (recur (evaluate-game-for-goal (move-player-in-game game 0 :south))) ;; Increment state
-        (= input "d") (recur (evaluate-game-for-goal (move-player-in-game game 0 :east)));; Increment state
-        (= input "f") (recur (evaluate-game-for-goal (player-picks-up-ball game 0))) ;; Increment state
-        (= input "g") (recur (evaluate-game-for-goal (player-drops-ball game 0))) ;; Incre)ment state
-        (= input "h") (recur (evaluate-game-for-goal (throw-ball game 0)))
-        (= input "e") (recur (evaluate-game-for-goal (wait-one-second game)))
-        :else (do
-                (println "Invalid key. Try again.")
-                (recur game)))))) ;; Continue with the current state
 
 
-(-> (new-game {:players [(player/generate-player)
-                         (player/generate-player {:position [0 3]})]})
-    (player-picks-up-ball  1)
-    (evaluate-game-for-goal)
-    (render))
-
-(-> (new-game)
-    (move-player-in-game 0 :east)
-    ;(player-picks-up-ball 0)
-    (move-player-in-game 0 :south)
-    (move-player-in-game 0 :south)
-    (move-player-in-game 2 :east)
-    ;(move-player-in-game 0 :east)
-    ;(player-picks-up-ball 0)
-    ;(player-drops-ball 0)
-    ;(move-player-in-game 0 :west )
-    ;(move-player-in-game 0 :east )
-    ;(player-picks-up-ball 0)
-    ;(move-player-in-game 0 :north )
-    ;(move-player-in-game 0 :north )
-    ;(move-player-in-game 0 :north )
-    ;(move-player-in-game 0 :north )
-    ;(evaluate-game-for-goal)
-    ;(move-player-in-game 0 :south )
-    ;(evaluate-game-for-goal)
-    ;(move-player-in-game 0 :north )
-    ;(evaluate-game-for-goal)
-    render
-
-    :board)
-;(move-player-in-game :east)
-;render
-;:board)

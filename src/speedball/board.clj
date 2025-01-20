@@ -17,6 +17,7 @@
     [center-x center-y]))
 (mc/=> center [:=> [:cat] core/Position])
 
+
 (defn player-tile [i]
   (nth [:1 :2 :3 :4 :5] i))
 (defn player-tile-holding-ball [i]
@@ -50,7 +51,7 @@
                   :else :.))))))
 
 (def Tile [:keyword])
-(def Row [:+ Tile])
+(def Row [:vector Tile])
 (def Board [:vector Row])
 
 (defn generate-board []

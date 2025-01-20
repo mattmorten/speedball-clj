@@ -29,6 +29,14 @@
 (defn add-vectors [& vecs]
   (vec (apply map + vecs)))
 
+(defn subtract-vectors [vec1 vec2]
+  (vec (apply map - [vec1 vec2])))
+
+(defn max-of-vector-elements [& vectors]
+  (apply mapv max vectors))
+
+(defn min-of-vector-elements [& vectors]
+  (apply mapv min vectors))
 
 
 (defn position [thing] (:position thing))

@@ -12,8 +12,13 @@
         - [ ] Bounce
         - [ ] Score Goal
     - [ ] Renderer
-      - [ ] Separate from the Game object / functions
+      - [x] Separate from the Game object / functions
       - [ ] Camera
+        - [x] Initial Camera
+        - [x] Moves
+        - [x] Tracks Player
+        - [x] Stays within board bounds
+        - [x] Toggle player that is being tracked
   - [ ] Game Loop
     - [x] Init
     - [ ] Toggle players

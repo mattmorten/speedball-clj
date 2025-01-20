@@ -20,7 +20,8 @@
 ;;
 (def TrackingState
   [:map
-   [:player core/Index]])
+   [:player core/Index]
+   [:object [:enum :player :ball]]])
 (def CameraMount
   [:map
    [:camera camera/Camera]
@@ -30,21 +31,29 @@
 (defn new-camera-mount []
   {:camera (camera/new-camera)
    :state :tracking
-   :details {:player 0}})
+   :details {:object :ball
+             :player 0}})
 
 (mc/=> new-camera-mount [:=> [:cat] CameraMount])
 
 (defn mount-state [camera-mount] (:state camera-mount))
 
+(defn tracking-subject-position
+  [camera-mount game]
+  (case (-> camera-mount :details :object)
+    :player (game/player-position game (-> camera-mount :details :player))
+    :ball (game/ball-position game)))
+
 (defn run-tracking
   [camera-mount game]
-  (let [{:keys [player]} (:details camera-mount)
-        player-position (game/player-position game player)
+  (let [tracking-subject-position (tracking-subject-position camera-mount game)
         camera (:camera camera-mount)
         minimum-bounds [0 0]
         maximum-bounds (core/subtract-vectors board/board-size (camera/dimensions camera))]
-    (update-in camera-mount [:camera]
-               (fn [old-camera] (camera/center-to old-camera player-position minimum-bounds maximum-bounds)))))
+    (update-in
+      camera-mount
+      [:camera]
+      (fn [old-camera] (camera/center-to old-camera tracking-subject-position minimum-bounds maximum-bounds)))))
 
 (mc/=> run-tracking [:=> [:cat CameraMount game/Game] CameraMount])
 
@@ -55,12 +64,24 @@
 
 (mc/=> evaluate-camera-mount-for-game [:=> [:cat CameraMount game/Game] CameraMount])
 
+(defn track-player
+  [camera-mount player-n]
+  (-> camera-mount
+      (assoc :state :tracking)
+      (assoc-in [:details :object] :player)
+      (assoc-in [:details :player] player-n)))
+
+(defn track-ball
+  [camera-mount]
+  (-> camera-mount
+      (assoc :state :tracking)
+      (assoc-in [:details :object] :ball)))
+
 (defn toggle-player-on-camera
   [camera-mount game]
-  (let [number-of-players (game/number-of-players game)]
-    (-> camera-mount
-        (assoc :state :tracking)
-        (update-in [:details :player] (fn [old-player] (mod (inc old-player) number-of-players))))))
+  (let [number-of-players (game/number-of-players game)
+        existing-player (-> camera-mount :details :player)]
+    (track-player camera-mount (mod (inc existing-player) number-of-players))))
 
 ;;
 ;; Rendering

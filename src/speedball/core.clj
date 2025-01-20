@@ -38,6 +38,13 @@
 (defn min-of-vector-elements [& vectors]
   (apply mapv min vectors))
 
+(defn distance
+  "Calculates the straight-line (Euclidean) distance between two 2D vectors."
+  [[x1 y1] [x2 y2]]
+  (Math/sqrt (+ (Math/pow (- x2 x1) 2)
+                (Math/pow (- y2 y1) 2))))
+
+
 
 (defn position [thing] (:position thing))
 

@@ -27,7 +27,8 @@
    {:board (board/generate-board)
     :players [(player/generate-player)
               (player/generate-player {:position [6 6]})
-              (player/generate-player {:position [7 1]})]
+              (player/generate-player {:position [6 7]})
+              (player/generate-player {:position [15 9]})]
     :teams 2
     :ball (ball/generate-ball)
     :goals [0 0]})
@@ -40,6 +41,15 @@
 
 (defn which-team [game player-n]
   (mod player-n (-> game :teams)))
+
+
+;; Player stuff
+(defn team-player->player-n [game team-n player-within-team-n]
+  (+ team-n (* (:teams game) player-within-team-n)))
+(defn player-n->team-player [game player-n]
+  {:team-n (mod player-n (:teams game))
+   :player-within-team (int (Math/floor (/ player-n (:teams game))))})
+
 
 ;;
 ;; Game

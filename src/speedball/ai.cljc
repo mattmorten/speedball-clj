@@ -11,7 +11,6 @@
 (mc/function-schemas)
 
 
-
 (def RandomWalkIntention [:map
                           [:name [:enum :random-walk]]])
 
@@ -34,3 +33,4 @@
   [intention game player-n]
   (case (:name intention)
     :random-walk (produce-random-walk-action game player-n)))
+

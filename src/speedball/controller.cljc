@@ -107,3 +107,15 @@
         (let [is-human-player? (= i human-player-n)]
           (cond-> (new-ai-controller game i)
                   is-human-player? (clear-intention)))))))
+
+(defn refresh-ai-controllers
+  "If the human-control switches, we have to re-evaluate the AIs
+   to no longer control the human player"
+  [ai-controllers human-controller game]
+  (let [human-player-n (player-n human-controller game)]
+    (vec
+      (for [ai ai-controllers]
+        (let [is-human-player? (= (player-n ai game) human-player-n)]
+          (if is-human-player?
+            (clear-intention ai)
+            (assoc ai :intention (ai/new-random-walk-intention))))))))

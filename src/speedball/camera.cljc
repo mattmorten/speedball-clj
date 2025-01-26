@@ -14,6 +14,7 @@
 (mc/function-schemas)
 
 
+
 (def Camera
   [:map
    [:width core/Index]
@@ -22,8 +23,8 @@
 
 (defn new-camera
   []
-  {:width 9
-   :height 7
+  {:width 15
+   :height 10
    :position [1 1]})
 
 (mc/=> new-camera [:=> [:cat] Camera])
@@ -34,7 +35,7 @@
 (defn -center-relative-to-position
   [camera]
   (let [{:keys [width height]} camera]
-     [(int (Math/floor (/ height 2.0))) (int (Math/floor (/ width 2.0)))]))
+    [(int (Math/floor (/ height 2.0))) (int (Math/floor (/ width 2.0)))]))
 
 (defn center [camera]
   (let [[y-relative-center x-relative-center] (-center-relative-to-position camera)

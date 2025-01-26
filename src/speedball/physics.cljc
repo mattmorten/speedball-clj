@@ -105,7 +105,7 @@
     (map (partial core/add-vectors start))
     (map (partial handle-walls board-dimensions))
     (take n)))
-    ;(take-until-repeat)))
+;(take-until-repeat)))
 
 
 ;(transduce xform conj (positions 0 0 30 20 0.2))

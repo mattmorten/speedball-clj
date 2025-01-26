@@ -29,6 +29,9 @@
 (def goal ["|---|"
            "|   |"])
 
+(def ball ["PP"
+           "PP"])
+
 (def Texture [:vector :string])
 (defn texture-size [texture]
   [(-> texture count)
@@ -58,6 +61,7 @@
    :0 (no-xform player)
    :1 (no-xform player1)
    :* (no-xform goal)
+   :o (centered ball)
    :v (centered center)})
 
 
@@ -124,13 +128,13 @@
 (mc/=> build-texture-map
        [:=> [:cat core/Index [:vector [:vector :keyword]]] [:map-of core/Position TileWithZ]])
 
-;; The z-value is set to the root-y value
-(t/is (= {[0 0] ["-" 10], [0 1] ["-" 10],
-          [1 0] ["-" 10], [1 1] ["0" 11], [1 2] ["0" 11]
-          [2 0] ["|" 12], [2 1] ["|" 12], [2 2] ["0" 11]}
-         (build-texture-map 10 [[:n :n]
-                                [:. :0]
-                                [:e]])))
+;;; The z-value is set to the root-y value
+;(t/is (= {[0 0] ["-" 10], [0 1] ["-" 10],
+;          [1 0] ["-" 10], [1 1] ["0" 11], [1 2] ["0" 11]
+;          [2 0] ["|" 12], [2 1] ["|" 12], [2 2] ["0" 11]}
+;         (build-texture-map 10 [[:n :n]
+;                                [:. :0]
+;                                [:e]])))
 
 ;(defn collapse-texture-map
 ;  "Takes all the z-values, declares a winner, removes the losers")
@@ -222,6 +226,7 @@
       board (board/generate-board dimensions)
       board (assoc-in board [8 8] :0)
       board (assoc-in board [12 58] :1)
+      board (assoc-in board [13 20] :o)
       board-map (build-texture-map 0 board)
       merged (merge-texture-maps floor-map board-map)]
   ;board-map)

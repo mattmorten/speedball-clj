@@ -25,13 +25,24 @@
         - [x] Toggle player that is being tracked
         - [x] Track ball when nobody has it
         - [ ] Smooth camera transitions
+    - [ ] Textures
+      - [ ] Static textures
+        - [x] Offsets / Centered
+      - [ ] Repeating textures (floor)
+        - [x] Mirrored / Seams
+      - [x] Z-value
+      - [x] Board -> Textures
+      - [ ] Colors
+      - [ ] Bounding Boxes (see Physics)
+      - [ ] Build out full library of textures
     - [ ] AI
       - [x] Random walk
       - [ ] Hone in on ball
       - [ ] Maintain positional shape / formation
     - [ ] Output
       - [ ] Web
-        - [ ] Convert to cljs
+        - [x] Convert to cljs
+        - [ ] Bring cljs code back into main repo, make it run
     - [ ] Game Loop
       - [x] Init
       - [ ] Toggle players

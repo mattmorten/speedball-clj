@@ -45,7 +45,7 @@
         - [ ] Bring cljs code back into main repo, make it run
     - [ ] Game Loop
       - [x] Init
-      - [ ] Toggle players
+      - [x] Toggle players
   - [ ] Code
     - [x] Schema validation
     - [x] Multiple namespaces

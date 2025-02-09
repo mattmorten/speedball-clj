@@ -10,7 +10,7 @@
             [speedball.board :as board]
             [speedball.ball :as ball]
             [speedball.camera :as camera]
-            [speedball.physics :as physics]))
+            [speedball.physics.physics :as physics]))
 
 
 (mi/instrument!)

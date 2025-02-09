@@ -9,7 +9,7 @@
             [speedball.board :as board]
             [speedball.camera :as camera]
             [speedball.ball :as ball]
-            [speedball.physics :as physics]))
+            [speedball.physics.physics :as physics]))
 
 (mi/instrument!)
 ((requiring-resolve 'malli.dev/start!))

@@ -7,7 +7,7 @@
             [speedball.player :as player]
             [speedball.board :as board]
             [speedball.ball :as ball]
-            [speedball.physics :as physics]))
+            [speedball.physics.physics :as physics]))
 
 (mi/instrument!)
 ((requiring-resolve 'malli.dev/start!))

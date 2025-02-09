@@ -1,6 +1,5 @@
 (ns speedball.renderer.textures
-  (:require [malli.core :as m]
-            [malli.instrument :as mi]
+  (:require [malli.instrument :as mi]
             [malli.core :as mc]
             [speedball.board :as board]
             [speedball.core :as core]

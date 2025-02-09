@@ -8,7 +8,7 @@
             [speedball.board :as board]
             [speedball.ball :as ball]
             [speedball.camera :as camera]
-            [speedball.physics :as physics]))
+            [speedball.physics.physics :as physics]))
 
 (mi/instrument!)
 ((requiring-resolve 'malli.dev/start!))
@@ -24,7 +24,7 @@
 
 (defn new-game
   ([]
-   {:board (board/generate-board)
+   {:board (board/generate-board [10 30])
     :players [(player/new-player)
               (player/new-player {:position [6 6]})
               (player/new-player {:position [6 7]})

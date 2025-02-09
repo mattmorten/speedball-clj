@@ -1,4 +1,4 @@
-(ns speedball.physics
+(ns speedball.physics.physics
   (:require [malli.core :as mc]
     [malli.instrument :as mi]
     [speedball.core :as core]))

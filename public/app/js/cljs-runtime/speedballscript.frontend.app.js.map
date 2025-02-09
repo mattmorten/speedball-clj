@@ -1,0 +1,1 @@
+{"version":3,"sources":["speedballscript/frontend/app.cljs"],"mappings":";AAIA,oCAAA,pCAAMA;AAAN,AACE,gHAAA,zGAACC","names":["speedballscript.frontend.app/init","cljs.core.println"],"sourcesContent":["(ns speedballscript.frontend.app)\n\n\n\n(defn init []\n  (println \"Speedball 2\"))"]}
